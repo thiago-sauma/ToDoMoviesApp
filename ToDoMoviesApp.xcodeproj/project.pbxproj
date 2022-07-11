@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AF22BDDC287CA09B00443462 /* ResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF22BDDB287CA09B00443462 /* ResultCell.swift */; };
+		AF22BDDE287CB92800443462 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF22BDDD287CB92800443462 /* DetailViewController.swift */; };
 		AF823F3D287C57ED00AD6C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */; };
 		AF823F3F287C57ED00AD6C81 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */; };
 		AF823F41287C57ED00AD6C81 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F40287C57ED00AD6C81 /* HomeViewController.swift */; };
@@ -21,6 +22,7 @@
 		4DA7A67CD8A0FE0CB6B8F94C /* Pods-ToDoMoviesApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoMoviesApp.debug.xcconfig"; path = "Target Support Files/Pods-ToDoMoviesApp/Pods-ToDoMoviesApp.debug.xcconfig"; sourceTree = "<group>"; };
 		AE220CD57E333EF0D4B5E9B9 /* Pods_ToDoMoviesApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoMoviesApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF22BDDB287CA09B00443462 /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
+		AF22BDDD287CB92800443462 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		AF823F39287C57ED00AD6C81 /* ToDoMoviesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoMoviesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */,
 				AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */,
 				AF823F40287C57ED00AD6C81 /* HomeViewController.swift */,
+				AF22BDDD287CB92800443462 /* DetailViewController.swift */,
 				AF22BDDB287CA09B00443462 /* ResultCell.swift */,
 				AF823F45287C57F400AD6C81 /* Assets.xcassets */,
 				AF823F47287C57F400AD6C81 /* LaunchScreen.storyboard */,
@@ -207,6 +210,7 @@
 			files = (
 				AF823F41287C57ED00AD6C81 /* HomeViewController.swift in Sources */,
 				AF823F3D287C57ED00AD6C81 /* AppDelegate.swift in Sources */,
+				AF22BDDE287CB92800443462 /* DetailViewController.swift in Sources */,
 				AF22BDDC287CA09B00443462 /* ResultCell.swift in Sources */,
 				AF823F3F287C57ED00AD6C81 /* SceneDelegate.swift in Sources */,
 			);
