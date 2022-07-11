@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF22BDDC287CA09B00443462 /* ResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF22BDDB287CA09B00443462 /* ResultCell.swift */; };
 		AF823F3D287C57ED00AD6C81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */; };
 		AF823F3F287C57ED00AD6C81 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */; };
-		AF823F41287C57ED00AD6C81 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F40287C57ED00AD6C81 /* ViewController.swift */; };
+		AF823F41287C57ED00AD6C81 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF823F40287C57ED00AD6C81 /* HomeViewController.swift */; };
 		AF823F46287C57F400AD6C81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF823F45287C57F400AD6C81 /* Assets.xcassets */; };
 		AF823F49287C57F400AD6C81 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF823F47287C57F400AD6C81 /* LaunchScreen.storyboard */; };
 		CC0C56E4EA3E8C36FBB0578F /* Pods_ToDoMoviesApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE220CD57E333EF0D4B5E9B9 /* Pods_ToDoMoviesApp.framework */; };
@@ -19,10 +20,11 @@
 		3A72D057F40C0C3F64CA1890 /* Pods-ToDoMoviesApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoMoviesApp.release.xcconfig"; path = "Target Support Files/Pods-ToDoMoviesApp/Pods-ToDoMoviesApp.release.xcconfig"; sourceTree = "<group>"; };
 		4DA7A67CD8A0FE0CB6B8F94C /* Pods-ToDoMoviesApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoMoviesApp.debug.xcconfig"; path = "Target Support Files/Pods-ToDoMoviesApp/Pods-ToDoMoviesApp.debug.xcconfig"; sourceTree = "<group>"; };
 		AE220CD57E333EF0D4B5E9B9 /* Pods_ToDoMoviesApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoMoviesApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF22BDDB287CA09B00443462 /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
 		AF823F39287C57ED00AD6C81 /* ToDoMoviesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoMoviesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		AF823F40287C57ED00AD6C81 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		AF823F40287C57ED00AD6C81 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		AF823F45287C57F400AD6C81 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF823F48287C57F400AD6C81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AF823F4A287C57F400AD6C81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -54,7 +56,6 @@
 				4DA7A67CD8A0FE0CB6B8F94C /* Pods-ToDoMoviesApp.debug.xcconfig */,
 				3A72D057F40C0C3F64CA1890 /* Pods-ToDoMoviesApp.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -81,7 +82,8 @@
 			children = (
 				AF823F3C287C57ED00AD6C81 /* AppDelegate.swift */,
 				AF823F3E287C57ED00AD6C81 /* SceneDelegate.swift */,
-				AF823F40287C57ED00AD6C81 /* ViewController.swift */,
+				AF823F40287C57ED00AD6C81 /* HomeViewController.swift */,
+				AF22BDDB287CA09B00443462 /* ResultCell.swift */,
 				AF823F45287C57F400AD6C81 /* Assets.xcassets */,
 				AF823F47287C57F400AD6C81 /* LaunchScreen.storyboard */,
 				AF823F4A287C57F400AD6C81 /* Info.plist */,
@@ -203,8 +205,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF823F41287C57ED00AD6C81 /* ViewController.swift in Sources */,
+				AF823F41287C57ED00AD6C81 /* HomeViewController.swift in Sources */,
 				AF823F3D287C57ED00AD6C81 /* AppDelegate.swift in Sources */,
+				AF22BDDC287CA09B00443462 /* ResultCell.swift in Sources */,
 				AF823F3F287C57ED00AD6C81 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

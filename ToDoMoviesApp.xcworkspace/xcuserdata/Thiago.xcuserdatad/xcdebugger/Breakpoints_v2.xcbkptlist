@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "5AE56F95-4098-4C94-AA30-20FD8B554E03"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "84C65BB0-A24D-4B18-8962-F9FE53DF77F6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ToDoMoviesApp/ResultCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "configureUI()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "84C65BB0-A24D-4B18-8962-F9FE53DF77F6 - 5b392ae4b961418"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ToDoMoviesApp.ResultCell.configureUI() -&gt; ()"
+                  moduleName = "ToDoMoviesApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Thiago/Documents/ToDoMoviesApp/ToDoMoviesApp/ToDoMoviesApp/ResultCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "53">
+               </Location>
+               <Location
+                  uuid = "84C65BB0-A24D-4B18-8962-F9FE53DF77F6 - 5b392ae4b961418"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ToDoMoviesApp.ResultCell.configureUI() -&gt; ()"
+                  moduleName = "ToDoMoviesApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Thiago/Documents/ToDoMoviesApp/ToDoMoviesApp/ToDoMoviesApp/ResultCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "118">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

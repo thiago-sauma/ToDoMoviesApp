@@ -22,7 +22,8 @@ class HomeViewController: UIViewController {
        let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: "MovieResultCell", bundle: nil), forCellReuseIdentifier: "MovieResultCell")
+        tableView.rowHeight = 70
+        tableView.register(ResultCell.self, forCellReuseIdentifier: String(describing: ResultCell.self))
         return tableView
     }()
 
@@ -69,9 +70,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         results.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        let result = results[indexPath.row]
-        cell.textLabel?.text = result
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
+        cell.configureUI()
         return cell
     }
     
