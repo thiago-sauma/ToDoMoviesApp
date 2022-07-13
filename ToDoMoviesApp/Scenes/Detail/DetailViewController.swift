@@ -2,8 +2,11 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class DetailViewController: UIViewController {
+    
+    var movie: Movie!
     
     private lazy var resultImageView: UIImageView = {
         let imageView = UIImageView()
@@ -23,17 +26,20 @@ class DetailViewController: UIViewController {
     
     private lazy var resultGenresLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         return label
     }()
     
     private lazy var resultDescriptionLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         return label
     }()
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.distribution = .fillProportionally
+        stackView.spacing = 16
         stackView.alignment = .leading
         stackView.axis = .vertical
         return stackView
@@ -72,12 +78,13 @@ class DetailViewController: UIViewController {
     private func setupConstraints() {
         resultImageView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.width.equalTo(view.frame.width / 2.0)
+            $0.width.equalTo(view.frame.width / 1.5)
             $0.height.equalTo(view.frame.height / 2.0)
             $0.centerX.equalToSuperview()
         }
         stackView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().inset(16)
             $0.top.equalTo(resultImageView.snp.bottom).offset(8)
         }
         
@@ -88,14 +95,25 @@ class DetailViewController: UIViewController {
     }
     
     private func updateUI() {
-        if let image = UIImage(systemName: "moon.fill") {
-            resultImageView.image = image
+        resultNameLabel.text = movie.title
+        resultGenresLabel.text = movie.getGenresArray(genreIds: movie.genres)
+        resultRatingLabel.text = "Vote Average: " + String(movie.grade)
+        resultDescriptionLabel.text = movie.overview
+        configureImageView(for: movie)
+                
+    }
+    
+    private func configureImageView(for movie: Movie) {
+        guard let urlString = movie.poster else {
+            if let image = UIImage(systemName: "moon.fill") {
+                resultImageView.image = image
+            }
+            return
         }
-        resultNameLabel.text = "Poderoso chefao"
-        resultGenresLabel.text = "Drama, ficcao"
-        resultRatingLabel.text = "9,98"
-        resultDescriptionLabel.text = "Um belissimo filme"
-        
+        guard let url = URL(string: "https://image.tmdb.org/t/p/original/" + urlString) else {
+           return
+        }
+        resultImageView.kf.setImage(with: url)
     }
     
     @objc private func close() {

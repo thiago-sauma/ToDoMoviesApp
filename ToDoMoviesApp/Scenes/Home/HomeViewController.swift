@@ -4,17 +4,21 @@ import SnapKit
 
 class HomeViewController: UIViewController {
     
-    var results = ["one", "two"]
+    var moviesArray = [Movie]()
+    var search: Search!
     
     lazy var searchBar: UISearchBar = {
        let searchBar = UISearchBar()
+        //searchBar.delegate = self
         searchBar.placeholder = "Search for a movie or a Tv Show"
         return searchBar
     }()
     
     lazy var segmentControl: UISegmentedControl = {
-        let segmentControl = UISegmentedControl(items: ["Movies", "Tv Shows"])
+        let segmentControl = UISegmentedControl(items: ["Popular", "Upcoming", "Top Rated", "Now Playing"])
         segmentControl.selectedSegmentIndex = 0
+        segmentControl.selectedSegmentTintColor = .systemBlue
+        segmentControl.addTarget(self, action: #selector(segmentControlDidChange), for: .valueChanged)
         return segmentControl
     }()
     
@@ -29,6 +33,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        search = Search()
          
     }
     
@@ -38,6 +43,12 @@ class HomeViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
         setupViews()
         setupContsraints()
+        search.performSearch(category: .popular) { results in
+            DispatchQueue.main.async {
+                self.moviesArray = results
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func setupViews() {
@@ -68,39 +79,42 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        results.count
+        moviesArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if moviesArray.isEmpty {
+            return UITableViewCell()
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
-        cell.configureUI()
+        let movie = moviesArray[indexPath.row]
+        cell.configureUI(for: movie)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = DetailViewController()
+        detailVC.movie = moviesArray[indexPath.row]
         navigationController?.pushViewController(detailVC, animated: true)
     }
-    
-    
-    
-    
+
 }
 
-//protocol UnknownCase: RawRepresentable, CaseIterable where RawValue: Equatable & Codable {
-//    static var unknownCase: Self { get }
-//}
-//
-//extension UnknownCase {
-//    init(rawValue: RawValue) {
-//        let value = Self.allCases.first { $0.rawValue == rawValue }
-//        self = value ?? Self.unknownCase
+extension HomeViewController {
+    @objc func segmentControlDidChange(_ sender: UISegmentedControl) {
+        let selectedSegmentIndex = sender.selectedSegmentIndex
+        search.performSearch(category: Category(rawValue: selectedSegmentIndex)!) { results in
+            DispatchQueue.main.async {
+                self.moviesArray = results
+                self.tableView.reloadData()
+            }
+        }
+    }
+}
+
+//extension HomeViewController: UISearchBarDelegate {
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        search.performSearch(url: searchBar.text!)
 //    }
-//
-//    init(from decoder: Decoder) throws {
-//        let container = try decoder.singleValueContainer()
-//        let rawValue = try container.decode(RawValue.self)
-//        let value = Self(rawValue: rawValue)
-//        self = value ?? Self.unknownCase
-//    }
 //}
+

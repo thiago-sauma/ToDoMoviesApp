@@ -2,6 +2,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
     class ResultCell: UITableViewCell {
         
@@ -29,20 +30,23 @@ import SnapKit
         
         private lazy var resultNameLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 17)
+            label.numberOfLines = 0
+            label.font = UIFont.boldSystemFont(ofSize: 14)
             return label
         }()
         
         private lazy var resultReleaseLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 14)
+            label.font = UIFont.italicSystemFont(ofSize: 12)
             label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             return label
         }()
         
         private lazy var resultGenresLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 14)
+            label.numberOfLines = 1
+            label.lineBreakMode = .byTruncatingTail
+            label.font = UIFont.italicSystemFont(ofSize: 12)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
             return label
         }()
@@ -59,7 +63,7 @@ import SnapKit
         private lazy var verticalStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
-            stackView.distribution = .fillEqually
+            stackView.distribution = .fillProportionally
             return stackView
         }()
     
@@ -84,20 +88,32 @@ import SnapKit
             }
             
             verticalStackView.snp.makeConstraints {
-                $0.leading.equalTo(resultImageView.snp.trailing).offset(16)
+                $0.leading.equalTo(resultImageView.snp.trailing).offset(8)
                 $0.height.equalTo(resultImageView.snp.height)
                 $0.centerY.equalToSuperview()
-                $0.trailing.greaterThanOrEqualToSuperview().offset(8)
+                $0.trailing.equalToSuperview().inset(8)
             }
         }
         
-        func configureUI() {
-            if let image = UIImage(systemName: "moon.fill") {
-                imageView?.image = image
+        func configureUI(for movie: Movie) {
+            resultNameLabel.text = movie.title
+            let date = dateFormatterFromString.date(from: movie.release)
+            resultReleaseLabel.text = dateFormatterToString.string(from: date!)
+            resultGenresLabel.text = movie.getGenresArray(genreIds: movie.genres)
+            configureImageView(for: movie)
+        }
+        
+        private func configureImageView(for movie: Movie) {
+            guard let urlString = movie.poster else {
+                if let image = UIImage(systemName: "moon.fill") {
+                    imageView?.image = image
+                }
+                return
             }
-            resultNameLabel.text = "Poderoso Chefao"
-            resultReleaseLabel.text = "1992"
-            resultGenresLabel.text = "Drama, ficcao"
+            guard let url = URL(string: "https://image.tmdb.org/t/p/original/" + urlString) else {
+               return
+            }
+            resultImageView.kf.setImage(with: url)
         }
 
 }
