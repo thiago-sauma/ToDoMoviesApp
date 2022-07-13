@@ -6,7 +6,16 @@ import Kingfisher
 
 class DetailViewController: UIViewController {
     
-    var movie: Movie!
+    var viewModel: DetailViewModel
+    
+    init(viewModel: DetailViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var resultImageView: UIImageView = {
         let imageView = UIImageView()
@@ -95,11 +104,11 @@ class DetailViewController: UIViewController {
     }
     
     private func updateUI() {
-        resultNameLabel.text = movie.title
-        resultGenresLabel.text = movie.getGenresArray(genreIds: movie.genres)
-        resultRatingLabel.text = "Vote Average: " + String(movie.grade)
-        resultDescriptionLabel.text = movie.overview
-        configureImageView(for: movie)
+        resultNameLabel.text = viewModel.movie.title
+        resultGenresLabel.text = viewModel.movie.getGenresArray(genreIds: viewModel.movie.genres)
+        resultRatingLabel.text = "Vote Average: " + String(viewModel.movie.grade)
+        resultDescriptionLabel.text = viewModel.movie.overview
+        configureImageView(for: viewModel.movie)
                 
     }
     

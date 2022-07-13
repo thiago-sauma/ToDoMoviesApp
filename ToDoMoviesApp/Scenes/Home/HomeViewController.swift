@@ -4,8 +4,16 @@ import SnapKit
 
 class HomeViewController: UIViewController {
     
-    var moviesArray = [Movie]()
-    var search: Search!
+    var viewModel: HomeViewModel
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     lazy var searchBar: UISearchBar = {
        let searchBar = UISearchBar()
@@ -33,7 +41,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        search = Search()
+        viewModel.delegate = self
          
     }
     
@@ -43,12 +51,7 @@ class HomeViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
         setupViews()
         setupContsraints()
-        search.performSearch(category: .popular) { results in
-            DispatchQueue.main.async {
-                self.moviesArray = results
-                self.tableView.reloadData()
-            }
-        }
+        viewModel.fetch(category: .popular)
     }
     
     private func setupViews() {
@@ -79,22 +82,22 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        moviesArray.count
+        viewModel.moviesArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if moviesArray.isEmpty {
+        if viewModel.moviesArray.isEmpty {
             return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
-        let movie = moviesArray[indexPath.row]
+        let movie = viewModel.moviesArray[indexPath.row]
         cell.configureUI(for: movie)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = DetailViewController()
-        detailVC.movie = moviesArray[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        let detailVC = DetailViewController(viewModel: DetailViewModel(movie: viewModel.moviesArray[indexPath.row]))
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
@@ -103,13 +106,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 extension HomeViewController {
     @objc func segmentControlDidChange(_ sender: UISegmentedControl) {
         let selectedSegmentIndex = sender.selectedSegmentIndex
-        search.performSearch(category: Category(rawValue: selectedSegmentIndex)!) { results in
-            DispatchQueue.main.async {
-                self.moviesArray = results
-                self.tableView.reloadData()
-            }
+        viewModel.fetch(category: Category(rawValue: selectedSegmentIndex)!)
+    }
+}
+
+extension HomeViewController: HomeViewModelDelegate {
+    func updateMovieResultsArray(with results: [Movie]) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
+    
 }
 
 //extension HomeViewController: UISearchBarDelegate {
