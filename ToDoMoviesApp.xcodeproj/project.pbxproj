@@ -22,6 +22,7 @@
 		AFEF87C1287EEF4500517762 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF87C0287EEF4500517762 /* DetailViewModel.swift */; };
 		AFEF87C3287EEF6500517762 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF87C2287EEF6500517762 /* HomeViewModel.swift */; };
 		AFEF87C5287F0BB300517762 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF87C4287F0BB300517762 /* ApiError.swift */; };
+		AFEF87C9287F5E0E00517762 /* NoResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEF87C8287F5E0E00517762 /* NoResultCell.swift */; };
 		CC0C56E4EA3E8C36FBB0578F /* Pods_ToDoMoviesApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE220CD57E333EF0D4B5E9B9 /* Pods_ToDoMoviesApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		AFEF87C0287EEF4500517762 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		AFEF87C2287EEF6500517762 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		AFEF87C4287F0BB300517762 /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
+		AFEF87C8287F5E0E00517762 /* NoResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +103,6 @@
 			children = (
 				AFEF87BD287EDDAD00517762 /* Detail */,
 				AFEF87BC287EDD9E00517762 /* Home */,
-				AF22BDDB287CA09B00443462 /* ResultCell.swift */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -145,6 +146,8 @@
 			children = (
 				AF823F40287C57ED00AD6C81 /* HomeViewController.swift */,
 				AFEF87C2287EEF6500517762 /* HomeViewModel.swift */,
+				AF22BDDB287CA09B00443462 /* ResultCell.swift */,
+				AFEF87C8287F5E0E00517762 /* NoResultCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				AF22BDE0287DA14C00443462 /* Search.swift in Sources */,
 				AF22BDDC287CA09B00443462 /* ResultCell.swift in Sources */,
 				AFEF87C1287EEF4500517762 /* DetailViewModel.swift in Sources */,
+				AFEF87C9287F5E0E00517762 /* NoResultCell.swift in Sources */,
 				AFEF87C5287F0BB300517762 /* ApiError.swift in Sources */,
 				AF823F3F287C57ED00AD6C81 /* SceneDelegate.swift in Sources */,
 			);

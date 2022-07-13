@@ -17,8 +17,7 @@ class HomeViewController: UIViewController {
     
     lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        //searchBar.delegate = self
-        searchBar.placeholder = "Search for a movie or a Tv Show"
+        searchBar.delegate = self
         return searchBar
     }()
     
@@ -36,22 +35,28 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = 70
         tableView.register(ResultCell.self, forCellReuseIdentifier: String(describing: ResultCell.self))
+        tableView.register(NoResultCell.self, forCellReuseIdentifier: String(describing: NoResultCell.self))
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.backgroundColor = .white
-        navigationController?.isNavigationBarHidden = true
+        configureUI()
         setupViews()
         setupContsraints()
         viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
+    }
+    
+    private func configureUI() {
+        searchBar.placeholder = "Search for a movie or a Tv Show"
+        view.backgroundColor = .white
+        navigationController?.isNavigationBarHidden = true
+        
     }
     
     private func setupViews() {
@@ -93,23 +98,35 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.moviesArray.count
+        switch viewModel.moviesArray.count {
+        case 0: return 1
+        default: return viewModel.moviesArray.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if viewModel.moviesArray.isEmpty {
-            return UITableViewCell()
+            return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath) as! NoResultCell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
+            let movie = viewModel.moviesArray[indexPath.row]
+            cell.configureUI(for: movie)
+            return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
-        let movie = viewModel.moviesArray[indexPath.row]
-        cell.configureUI(for: movie)
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let detailVC = DetailViewController(viewModel: DetailViewModel(movie: viewModel.moviesArray[indexPath.row]))
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if viewModel.moviesArray.isEmpty && indexPath.row == 0 {
+            return nil
+        }
+        return indexPath
     }
     
 }
@@ -134,9 +151,15 @@ extension HomeViewController: HomeViewModelDelegate {
     
 }
 
-//extension HomeViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        search.performSearch(url: searchBar.text!)
-//    }
-//}
+extension HomeViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText != "" {
+            viewModel.handleSearchText(searchText: searchText)
+            tableView.reloadData()
+        } else {
+            searchBar.placeholder = "Search for a movie or a Tv Show"
+            viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
+        }
+    }
+}
 

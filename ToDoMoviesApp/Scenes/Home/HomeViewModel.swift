@@ -26,8 +26,15 @@ class HomeViewModel {
             case .failure(let error):
                 self.delegate?.updateErrorMessage(with: error)
             }
-        
         }
+    }
+    
+    func handleSearchText(searchText: String) {
+        var filteredArray: [Movie] = []
+        filteredArray = moviesArray.filter {
+            $0.title.lowercased().contains(searchText.lowercased())
+        }
+        moviesArray = filteredArray
     }
     
     
