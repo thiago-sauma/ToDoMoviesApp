@@ -4,6 +4,7 @@ import Foundation
 
 protocol HomeViewModelDelegate {
     func updateMovieResultsArray(with results: [Movie])
+    func updateErrorMessage(with error: ApiError)
 }
 
 class HomeViewModel {
@@ -23,7 +24,7 @@ class HomeViewModel {
                 self.moviesArray = moviesResults
                 self.delegate?.updateMovieResultsArray(with: self.moviesArray)
             case .failure(let error):
-                break
+                self.delegate?.updateErrorMessage(with: error)
             }
         
         }

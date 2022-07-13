@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
     }
     
     lazy var searchBar: UISearchBar = {
-       let searchBar = UISearchBar()
+        let searchBar = UISearchBar()
         //searchBar.delegate = self
         searchBar.placeholder = "Search for a movie or a Tv Show"
         return searchBar
@@ -31,18 +31,18 @@ class HomeViewController: UIViewController {
     }()
     
     lazy var tableView: UITableView = {
-       let tableView = UITableView()
+        let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = 70
         tableView.register(ResultCell.self, forCellReuseIdentifier: String(describing: ResultCell.self))
         return tableView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-         
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +51,7 @@ class HomeViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
         setupViews()
         setupContsraints()
-        viewModel.fetch(category: .popular)
+        viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
     }
     
     private func setupViews() {
@@ -77,6 +77,17 @@ class HomeViewController: UIViewController {
             $0.bottom.equalToSuperview()
         }
     }
+    
+    private func createAlertErrorDialog(error: ApiError) {
+        DispatchQueue.main.async {
+            let alertVC = UIAlertController(title: "Ups...", message: error.errorDescription, preferredStyle: .alert)
+            let action = UIAlertAction(title: "Try Again!", style: .default) {_ in
+                self.viewModel.fetch(category: Category(rawValue: self.segmentControl.selectedSegmentIndex)!)
+            }
+            alertVC.addAction(action)
+            self.present(alertVC, animated: true)
+        }
+    }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -100,7 +111,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let detailVC = DetailViewController(viewModel: DetailViewModel(movie: viewModel.moviesArray[indexPath.row]))
         navigationController?.pushViewController(detailVC, animated: true)
     }
-
+    
 }
 
 extension HomeViewController {
@@ -111,6 +122,10 @@ extension HomeViewController {
 }
 
 extension HomeViewController: HomeViewModelDelegate {
+    func updateErrorMessage(with error: ApiError) {
+        createAlertErrorDialog(error: error)
+    }
+    
     func updateMovieResultsArray(with results: [Movie]) {
         DispatchQueue.main.async {
             self.tableView.reloadData()

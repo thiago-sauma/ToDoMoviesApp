@@ -33,8 +33,8 @@ struct Search {
     func performSearch(category: Category, completion: @escaping (Result<[Movie], ApiError>) -> Void) {
         let session = URLSession.shared
         let dataTask = session.dataTask(with: getURL(for: category)!) { data, response, error in
-            if  let error = error {
-                completion(.failure(.comunicationError(error)))
+            if  error != nil {
+                completion(.failure(.comunicationError))
                 return
             }
             if let response = response as? HTTPURLResponse,
@@ -43,9 +43,7 @@ struct Search {
                     if let results = parseData(data: data){
                         completion(.success(results))
                     }
-                    completion(.failure(.jsonError))
                 }
-                completion(.failure(.dataError))
             }
             handleHttpError(response: response) { error in
                 completion(.failure(error))
@@ -57,6 +55,8 @@ struct Search {
     private func handleHttpError(response: URLResponse?, completion: @escaping ((ApiError) -> Void)) {
         if let httpResponse = response as? HTTPURLResponse {
             switch httpResponse.statusCode {
+            case 200:
+                break
             case 401:
                 completion(.error401)
             case 500:
