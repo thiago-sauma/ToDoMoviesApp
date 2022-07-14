@@ -4,6 +4,7 @@ import UIKit
 
 struct Search {
     
+    
     private func getURL(for category: Category) -> URL? {
         var endpoint: String
         switch category {

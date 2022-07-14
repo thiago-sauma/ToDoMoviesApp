@@ -4,7 +4,7 @@ import SnapKit
 
 class HomeViewController: UIViewController {
     
-    var viewModel: HomeViewModel
+    private var viewModel: HomeViewModel
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -36,6 +36,7 @@ class HomeViewController: UIViewController {
         tableView.rowHeight = 70
         tableView.register(ResultCell.self, forCellReuseIdentifier: String(describing: ResultCell.self))
         tableView.register(NoResultCell.self, forCellReuseIdentifier: String(describing: NoResultCell.self))
+        tableView.register(LoadingCell.self, forCellReuseIdentifier: String(describing: LoadingCell.self))
         return tableView
     }()
     
@@ -98,21 +99,25 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch viewModel.moviesArray.count {
-        case 0: return 1
-        default: return viewModel.moviesArray.count
+        switch viewModel.searchStatus {
+            case .noResults, .loading, .error(_ ): return 1
+            case .success: return viewModel.moviesArray.count
         }
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if viewModel.moviesArray.isEmpty {
-            return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath) as! NoResultCell
-        } else {
+        switch viewModel.searchStatus {
+        case .loading, .error(_ ):
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath) as! LoadingCell
+            cell.spinActivityIndicator.startAnimating()
+            return cell
+        case .success:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
             let movie = viewModel.moviesArray[indexPath.row]
             cell.configureUI(for: movie)
             return cell
+        case .noResults:
+            return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath)
         }
     }
     
@@ -123,12 +128,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if viewModel.moviesArray.isEmpty && indexPath.row == 0 {
-            return nil
+        switch viewModel.searchStatus {
+            case .noResults, .loading, .error(_ ): return nil
+            case .success: return indexPath
         }
-        return indexPath
     }
-    
 }
 
 extension HomeViewController {
@@ -139,16 +143,14 @@ extension HomeViewController {
 }
 
 extension HomeViewController: HomeViewModelDelegate {
-    func updateErrorMessage(with error: ApiError) {
-        createAlertErrorDialog(error: error)
-    }
-    
-    func updateMovieResultsArray(with results: [Movie]) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
+    func searchStatusDidUpdate(statusDidChangeTo status: SearchStatus) {
+        switch status {
+        case .noResults, .success, .loading:
+            tableView.reloadData()
+        case .error(let error):
+            createAlertErrorDialog(error: error)
         }
     }
-    
 }
 
 extension HomeViewController: UISearchBarDelegate {
