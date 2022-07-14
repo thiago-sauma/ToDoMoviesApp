@@ -1,30 +1,38 @@
-
-
 import Foundation
 
 protocol HomeViewModelDelegate {
-    func updateMovieResultsArray(with results: [Movie])
-    func updateErrorMessage(with error: ApiError)
+    func searchStatusDidUpdate(statusDidChangeTo status: SearchStatus)
 }
 
 class HomeViewModel {
     
     var delegate: HomeViewModelDelegate?
-    var moviesArray = [Movie]()
-    var search: Search
+    private (set) var moviesArray = [Movie]()
+    private (set) var search: Search
+    
+    private (set) var searchStatus: SearchStatus = .loading {
+        didSet {
+            delegate?.searchStatusDidUpdate(statusDidChangeTo: searchStatus)
+        }
+    }
     
     init(search: Search) {
         self.search = search
     }
     
     func fetch(category: Category) {
+        searchStatus = .loading
         search.performSearch(category: category) {  results in
             switch results {
             case .success(let moviesResults):
-                self.moviesArray = moviesResults
-                self.delegate?.updateMovieResultsArray(with: self.moviesArray)
+                DispatchQueue.main.async {
+                    self.moviesArray = moviesResults
+                    self.searchStatus = .success
+            }
             case .failure(let error):
-                self.delegate?.updateErrorMessage(with: error)
+                DispatchQueue.main.async {
+                    self.searchStatus = .error(error)
+                }
             }
         }
     }
@@ -35,6 +43,9 @@ class HomeViewModel {
             $0.title.lowercased().contains(searchText.lowercased())
         }
         moviesArray = filteredArray
+        if moviesArray.isEmpty {
+            searchStatus = .noResults
+        }
     }
     
     
