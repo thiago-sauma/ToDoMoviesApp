@@ -1,6 +1,10 @@
-
 import UIKit
 import SnapKit
+
+enum HomeViewControllerTableViewSection: Int {
+    case moviesSection = 0
+    case loadingMoreResultsSection = 1
+}
 
 class HomeViewController: UIViewController {
     
@@ -98,26 +102,46 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch viewModel.searchStatus {
-            case .noResults, .loading, .error(_ ): return 1
-            case .success: return viewModel.moviesArray.count
+        switch section {
+        case HomeViewControllerTableViewSection.moviesSection.rawValue:
+            switch viewModel.searchStatus {
+                case .noResults, .loading, .error(_ ): return 1
+                case .success: return viewModel.moviesArray.count
+            }
+        case HomeViewControllerTableViewSection.loadingMoreResultsSection.rawValue:
+            return viewModel.isLoadingMore ? 1 : 0
+        default:
+            return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch viewModel.searchStatus {
-        case .loading, .error(_ ):
+        switch indexPath.section{
+        case HomeViewControllerTableViewSection.moviesSection.rawValue:
+            switch viewModel.searchStatus {
+            case .loading, .error(_ ):
+                let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath) as! LoadingCell
+                cell.spinActivityIndicator.startAnimating()
+                return cell
+            case .success:
+                let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
+                let movie = viewModel.moviesArray[indexPath.row]
+                cell.configureUI(for: movie)
+                return cell
+            case .noResults:
+                return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath)
+            }
+        case HomeViewControllerTableViewSection.loadingMoreResultsSection.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath) as! LoadingCell
             cell.spinActivityIndicator.startAnimating()
             return cell
-        case .success:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
-            let movie = viewModel.moviesArray[indexPath.row]
-            cell.configureUI(for: movie)
-            return cell
-        case .noResults:
-            return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath)
+        default:
+            return UITableViewCell()
         }
     }
     
@@ -133,11 +157,24 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             case .success: return indexPath
         }
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        handleLoadingMore(offsetY: offsetY, scrollView: scrollView)
+    }
+    
+    private func handleLoadingMore(offsetY: CGFloat, scrollView: UIScrollView){
+        let contentHeight = scrollView.contentSize.height
+        if offsetY > contentHeight - scrollView.frame.height{
+            viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
+        }
+    }
 }
 
 extension HomeViewController {
     @objc func segmentControlDidChange(_ sender: UISegmentedControl) {
         let selectedSegmentIndex = sender.selectedSegmentIndex
+        viewModel.moviesArray = []
         viewModel.fetch(category: Category(rawValue: selectedSegmentIndex)!)
     }
 }

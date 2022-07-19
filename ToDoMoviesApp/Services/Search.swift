@@ -5,35 +5,38 @@ import UIKit
 struct Search {
     
     
-    private func getURL(for category: Category) -> URL? {
-        var endpoint: String
-        switch category {
-        case .popular:
-            endpoint = EndPoint.popular.name
-        case .upcoming:
-            endpoint = EndPoint.upcoming.name
-        case .topRated:
-            endpoint = EndPoint.topRated.name
-        case .nowPlaying:
-            endpoint = EndPoint.nowPlaying.name
-        }
+    private func getURL(for category: Category, page: Int) -> URL? {
+        let endpoint: String = getEndPoint(category: category, for: page)
         guard let url = URL(string: endpoint) else { return nil }
         return url
     }
     
-    private func parseData(data: Data) -> [Movie]? {
+    private func getEndPoint(category: Category, for page: Int)-> String {
+        switch category {
+        case .popular:
+            return "https://api.themoviedb.org/3/movie/popular?api_key=b5c5db7a09a995c8269a97947cef3552&language=en-US&page=\(page)"
+        case .upcoming:
+            return "https://api.themoviedb.org/3/movie/upcoming?api_key=b5c5db7a09a995c8269a97947cef3552&language=en-US&page=\(page)"
+        case .topRated:
+            return "https://api.themoviedb.org/3/movie/top_rated?api_key=b5c5db7a09a995c8269a97947cef3552&language=en-US&page=\(page)"
+        case .nowPlaying:
+            return "https://api.themoviedb.org/3/movie/now_playing?api_key=b5c5db7a09a995c8269a97947cef3552&language=en-US&page=\(page)"
+        }
+    }
+    
+    private func parseData(data: Data) -> MoviesResults? {
         let jsonDecoder = JSONDecoder()
         do {
             let resultsArray = try jsonDecoder.decode(MoviesResults.self, from: data)
-            return resultsArray.results
+            return resultsArray
         } catch {
             return nil
         }
     }
     
-    func performSearch(category: Category, completion: @escaping (Result<[Movie], ApiError>) -> Void) {
+    func performSearch(category: Category, page: Int, completion: @escaping (Result< MoviesResults, ApiError>) -> Void) {
         let session = URLSession.shared
-        let dataTask = session.dataTask(with: getURL(for: category)!) { data, response, error in
+        let dataTask = session.dataTask(with: getURL(for: category, page: page)!) { data, response, error in
             if  error != nil {
                 completion(.failure(.comunicationError))
                 return
