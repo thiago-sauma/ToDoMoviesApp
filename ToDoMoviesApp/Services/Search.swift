@@ -1,9 +1,6 @@
-
-
 import UIKit
 
 struct Search {
-    
     
     private func getURL(for category: Category, page: Int) -> URL? {
         let endpoint: String = getEndPoint(category: category, for: page)
