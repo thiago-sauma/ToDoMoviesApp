@@ -1,10 +1,14 @@
-
-
 import UIKit
 
 struct MoviesResults: Codable {
     var page: Int
     var results: [Movie]
+    var totalPages: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case totalPages = "total_pages"
+        case page, results
+    }
 }
 
 struct Movie: Codable {
@@ -14,7 +18,6 @@ struct Movie: Codable {
     var title: String
     var grade: Double
     var poster: String?
-    
      
     enum CodingKeys: String, CodingKey {
         case release = "release_date"

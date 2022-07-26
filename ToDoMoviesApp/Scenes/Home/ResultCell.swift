@@ -41,25 +41,7 @@ import Kingfisher
             label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             return label
         }()
-        
-        private lazy var resultGenresLabel: UILabel = {
-            let label = UILabel()
-            label.numberOfLines = 1
-            label.lineBreakMode = .byTruncatingTail
-            label.font = UIFont.italicSystemFont(ofSize: 12)
-            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            return label
-        }()
-        
-        private lazy var horizontalStackView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.axis = .horizontal
-            stackView.alignment = .leading
-            stackView.distribution = .fill
-            stackView.spacing = 8
-            return stackView
-        }()
-        
+                        
         private lazy var verticalStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
@@ -73,11 +55,7 @@ import Kingfisher
             self.addSubview(verticalStackView)
             
             verticalStackView.addArrangedSubview(resultNameLabel)
-            verticalStackView.addArrangedSubview(horizontalStackView)
-            
-            horizontalStackView.addArrangedSubview(resultReleaseLabel)
-            horizontalStackView.addArrangedSubview(resultGenresLabel)
-            
+            verticalStackView.addArrangedSubview(resultReleaseLabel)
         }
         
         private func setupConstraints() {
@@ -97,9 +75,8 @@ import Kingfisher
         
         func configureUI(for movie: Movie) {
             resultNameLabel.text = movie.title
-            let date = dateFormatterFromString.date(from: movie.release)
-            resultReleaseLabel.text = dateFormatterToString.string(from: date!)
-            resultGenresLabel.text = movie.getGenresArray(genreIds: movie.genres)
+            guard let date = dateFormatterFromString.date(from: movie.release) else { return }
+            resultReleaseLabel.text = dateFormatterToString.string(from: date)
             configureImageView(for: movie)
         }
         

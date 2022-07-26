@@ -1,4 +1,3 @@
-
 import UIKit
 import SnapKit
 
@@ -15,25 +14,25 @@ class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var searchBar: UISearchBar = {
+    private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.placeholder = viewModel.searchBarPlaceHolder
         searchBar.delegate = self
         return searchBar
     }()
     
-    lazy var segmentControl: UISegmentedControl = {
-        let segmentControl = UISegmentedControl(items: ["Popular", "Upcoming", "Top Rated", "Now Playing"])
+    private lazy var segmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl(items: viewModel.segmentControlItemsArray)
         segmentControl.selectedSegmentIndex = 0
         segmentControl.selectedSegmentTintColor = .systemBlue
         segmentControl.addTarget(self, action: #selector(segmentControlDidChange), for: .valueChanged)
         return segmentControl
     }()
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = 70
         tableView.register(ResultCell.self, forCellReuseIdentifier: String(describing: ResultCell.self))
         tableView.register(NoResultCell.self, forCellReuseIdentifier: String(describing: NoResultCell.self))
         tableView.register(LoadingCell.self, forCellReuseIdentifier: String(describing: LoadingCell.self))
@@ -50,14 +49,13 @@ class HomeViewController: UIViewController {
         configureUI()
         setupViews()
         setupContsraints()
+        viewModel.resetPagination()
         viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
     }
     
     private func configureUI() {
-        searchBar.placeholder = "Search for a movie or a Tv Show"
         view.backgroundColor = .white
         navigationController?.isNavigationBarHidden = true
-        
     }
     
     private func setupViews() {
@@ -94,33 +92,52 @@ class HomeViewController: UIViewController {
             self.present(alertVC, animated: true)
         }
     }
+    
+    @objc private func segmentControlDidChange(_ sender: UISegmentedControl) {
+        let selectedSegmentIndex = sender.selectedSegmentIndex
+        viewModel.resetPagination()
+        viewModel.fetch(category: Category(rawValue: selectedSegmentIndex)!)
+    }
 }
-
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UITableViewDataSource {
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        2
+//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch viewModel.searchStatus {
-            case .noResults, .loading, .error(_ ): return 1
-            case .success: return viewModel.moviesArray.count
-        }
+            switch viewModel.searchStatus {
+            case .noResults, .loading, .error(_ ):
+                return 1
+            case .success:
+                return viewModel.moviesArray.count
+            }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch viewModel.searchStatus {
-        case .loading, .error(_ ):
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath) as! LoadingCell
-            cell.spinActivityIndicator.startAnimating()
-            return cell
-        case .success:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
-            let movie = viewModel.moviesArray[indexPath.row]
-            cell.configureUI(for: movie)
-            return cell
-        case .noResults:
-            return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath)
+            switch viewModel.searchStatus {
+            case .loading, .error(_ ):
+                let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: LoadingCell.self), for: indexPath) as! LoadingCell
+                cell.spinActivityIndicator.startAnimating()
+                return cell
+            case .success:
+                let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultCell.self), for: indexPath) as! ResultCell
+                let movie = viewModel.moviesArray[indexPath.row]
+                cell.configureUI(for: movie)
+                return cell
+            case .noResults:
+                return tableView.dequeueReusableCell(withIdentifier: String(describing: NoResultCell.self), for: indexPath)
+            }
+        }
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.moviesArray.count - 1 {
+            viewModel.isLoadingMore = true
+            viewModel.fetch(category: Category(rawValue: segmentControl.selectedSegmentIndex)!)
         }
     }
-    
+}
+extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let detailVC = DetailViewController(viewModel: DetailViewModel(movie: viewModel.moviesArray[indexPath.row]))
@@ -129,16 +146,20 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         switch viewModel.searchStatus {
-            case .noResults, .loading, .error(_ ): return nil
-            case .success: return indexPath
+        case .noResults, .loading, .error(_ ):
+            return nil
+        case .success:
+            return indexPath
         }
     }
-}
-
-extension HomeViewController {
-    @objc func segmentControlDidChange(_ sender: UISegmentedControl) {
-        let selectedSegmentIndex = sender.selectedSegmentIndex
-        viewModel.fetch(category: Category(rawValue: selectedSegmentIndex)!)
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return 70
+        default:
+            return 30
+        }
     }
 }
 

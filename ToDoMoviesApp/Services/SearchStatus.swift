@@ -1,7 +1,3 @@
-
-
-import Foundation
-
 enum SearchStatus {
     case noResults
     case success
